@@ -1,4 +1,4 @@
-# Promise Patterns
+# Promise Patterns ![Build status](https://api.travis-ci.org/i-like-robots/promise-patterns.png)
 
 Utility functions to help compose promise based code. Inspired by the [Async package](https://github.com/caolan/async).
 
