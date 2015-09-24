@@ -1,0 +1,24 @@
+{
+  "name": "promise-patterns",
+  "version": "0.0.1",
+  "description": "Utility functions to help compose promise based code.",
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha 'tests/spec/**/*.js'"
+  },
+  "author": "Matt Hinchliffe",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:i-like-robots/promise-patterns.git"
+  },
+  "homepage": "https://github.com/i-like-robots/promise-patterns",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^2.3.2",
+    "sinon": "^1.16.1"
+  }
+}
