@@ -1,6 +1,6 @@
 {
   "name": "promise-patterns",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Utility functions to help compose promise based code.",
   "engines": {
     "node": ">=4.0.0"

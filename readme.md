@@ -10,9 +10,9 @@ npm install --save promise-patterns
 
 ## API
 
-### series([Array|Object])
+### series(work:Array|Object)
 
-Executes each function in the given array or object of `tasks` in series (each function will be called when the previous has finished). Each function must return a promise or a resolved value. The fulfilled callback will receive an array of the results or an object with each key assigned the resolved value.
+Executes each function in the given array or object of `work` in series (each function will be called when the previous has finished). Each function must return a promise or a resolved value. The fulfilled callback will receive an array of the results or an object with each key assigned the resolved value.
 
 ```js
 var promiseSeries = require('promise-patterns').series
@@ -34,17 +34,17 @@ promiseSeries({ api1: getApi1, api2: getApi2 })
   .then(res => console.log(res)) // { api1: [Object], api2: [Object] } 
 ```
 
-### waterfall([Array])
+### waterfall(work:Array)
 
-Executes each function in the given array in series (each function will be called when the previous has finished) and passes the result of the previous to the next. Each function must return a promise or a resolved value. The fulfilled callback will receive the final result. This function can be considered equivalent to `promise1.then(promise2).then(promise3)` but is useful for composing a dynamic chain.
+Executes each function in the given array of `work` in series (each function will be called when the previous has finished) and passes the result of the previous to the next. Each function must return a promise or a resolved value. The fulfilled callback will receive the final result. This function can be considered equivalent to `promise1.then(promise2).then(promise3)` but is useful for composing a dynamic chain.
 
 ```js
 var promiseWaterfall = require('promise-patterns').waterfall
 var workToDo = []
 
-for (let id of [1, 2, 3]) {
-  workToDo.push(function() {
-    return fetch(`http://localhost/endpoint-${id}.json`)
+for (let i of [1, 2, 3]) {
+  workToDo.push(function(previous) {
+    return fetch(`http://localhost/endpoint-${i}.json?exclude=${previous.id}`)
       .then(res => res.json())
   })
 }
@@ -53,7 +53,22 @@ promiseWaterfall(workToDo)
   .then(res => console.log(res)) // [Object] 
 ```
 
-### batch
+### chunk(work:Array, size:Number = 5)
 
-Coming soon.
+Splits the given array of `work` into chunks of the maximum given `size` and executes each chunk in series. The functions within a chunk will be executed in parallel. Each function must return a promise or a resolved value. The fulfilled callback will receive a single array of all of the results. This can be considered equivalent to `Promise.all` but is useful for throttling tasks.
 
+```js
+var promiseChunk = require('promise-patterns').chunk
+var workToDo = []
+var i = 0
+
+while (i++ < 12) {
+  workToDo.push(function() {
+    return fetch(`http://localhost/endpoint-${i}.json`)
+      .then(res => res.json())
+  })
+}
+
+promiseChunk(workToDo, 3)
+  .then(res => console.log(res)) // [[Object],[Object],[Object],...]
+```
