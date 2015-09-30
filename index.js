@@ -1,3 +1,4 @@
 module.exports = {
-  series: require('./lib/series')
+  series: require('./lib/series'),
+  waterfall: require('./lib/waterfall')
 }
