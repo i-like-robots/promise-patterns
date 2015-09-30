@@ -1,24 +1,24 @@
 var assert = require('assert')
-var Task = require('../fixtures/task')
+var work = require('../helpers/work')
 var subject = require('../../lib/waterfall')
 
 describe('Waterfall', function() {
 
-  var work, tasks, fulfilled, rejected
+  var todo, tasks, fulfilled, rejected
 
   function run(tasks) {
     return subject(tasks).then(args => fulfilled = args, args => rejected = args)
   }
 
   beforeEach(function() {
-    work = [ new Task(1), new Task(2), new Task(3) ]
+    todo = work(3)
     fulfilled = rejected = undefined
   })
 
   describe('given an array', function() {
 
     beforeEach(function() {
-      tasks = [ work[0].fulfill, work[1].fulfill, work[2].fulfill ]
+      tasks = todo.map(item => item.fulfill)
       // Make a duplicate array because the tasks array will be modified
       return run([].concat(tasks))
     })
@@ -29,12 +29,12 @@ describe('Waterfall', function() {
     })
 
     it('passes each result to the next', function() {
-      assert.ok(tasks[1].calledWith(work[0].value))
-      assert.ok(tasks[2].calledWith(work[1].value))
+      assert.ok(tasks[1].calledWith(todo[0].value))
+      assert.ok(tasks[2].calledWith(todo[1].value))
     })
 
     it('returns the last result', function() {
-      assert.equal(fulfilled, work[2].value)
+      assert.equal(fulfilled, todo[2].value)
     })
 
   })
@@ -55,7 +55,8 @@ describe('Waterfall', function() {
   describe('when handling rejection', function() {
 
     beforeEach(function() {
-      tasks = [ work[0].fulfill, work[1].reject, work[2].fulfill ]
+      tasks = todo.map(item => item.fulfill)
+      tasks[1] = todo[1].reject
       return run(tasks)
     })
 
