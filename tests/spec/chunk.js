@@ -7,7 +7,10 @@ describe('Chunk', function() {
   var todo, tasks, fulfilled, rejected
 
   function run(tasks) {
-    return subject(tasks, 3).then(args => fulfilled = args, args => rejected = args)
+    return subject(tasks, 3).then(
+      args => fulfilled = args || true,
+      args => rejected = args || true
+    )
   }
 
   beforeEach(function() {
@@ -37,6 +40,20 @@ describe('Chunk', function() {
       assert.equal(todo[0].value, fulfilled[0])
       assert.equal(todo[1].value, fulfilled[1])
       assert.equal(todo[2].value, fulfilled[2])
+    })
+
+  })
+
+  describe('given an empty array', function() {
+
+    beforeEach(function() {
+      tasks = []
+      return run(tasks)
+    })
+
+    it('resolves successfully', function() {
+      assert.ok(Array.isArray(fulfilled))
+      assert.ok(rejected === undefined)
     })
 
   })
