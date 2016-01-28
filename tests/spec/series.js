@@ -7,7 +7,10 @@ describe('Series', function() {
   var todo, tasks, fulfilled, rejected
 
   function run(tasks) {
-    return subject(tasks).then(args => fulfilled = args, args => rejected = args)
+    return subject(tasks).then(
+      args => fulfilled = args || true,
+      args => rejected = args || true
+    )
   }
 
   beforeEach(function() {
@@ -62,6 +65,34 @@ describe('Series', function() {
       assert.equal(todo[0].value, fulfilled.one)
       assert.equal(todo[1].value, fulfilled.two)
       assert.equal(todo[2].value, fulfilled.three)
+    })
+
+  })
+
+  describe('given an empty array', function() {
+
+    beforeEach(function() {
+      tasks = []
+      return run(tasks)
+    })
+
+    it('resolves with an empty array', function() {
+      assert.ok(Array.isArray(fulfilled))
+      assert.ok(rejected === undefined)
+    })
+
+  })
+
+  describe('given an empty object', function() {
+
+    beforeEach(function() {
+      tasks = {}
+      return run(tasks)
+    })
+
+    it('resolves with an empty object', function() {
+      assert.ok(typeof fulfilled === 'object')
+      assert.ok(rejected === undefined)
     })
 
   })

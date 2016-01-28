@@ -7,7 +7,10 @@ describe('Waterfall', function() {
   var todo, tasks, fulfilled, rejected
 
   function run(tasks) {
-    return subject(tasks).then(args => fulfilled = args, args => rejected = args)
+    return subject(tasks).then(
+      args => fulfilled = args || true,
+      args => rejected = args || true
+    )
   }
 
   beforeEach(function() {
@@ -35,6 +38,20 @@ describe('Waterfall', function() {
 
     it('returns the last result', function() {
       assert.equal(fulfilled, todo[2].value)
+    })
+
+  })
+
+  describe('given an empty array', function() {
+
+    beforeEach(function() {
+      tasks = []
+      return run(tasks)
+    })
+
+    it('resolves with an empty array', function() {
+      assert.ok(Array.isArray(fulfilled))
+      assert.ok(rejected === undefined)
     })
 
   })
