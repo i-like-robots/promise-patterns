@@ -1,6 +1,6 @@
 # Promise Patterns ![Build status](https://api.travis-ci.org/i-like-robots/promise-patterns.png)
 
-Utility functions to help compose promise based code. Inspired by the [Async package](https://github.com/caolan/async).
+Utility functions to help compose promise based code. Loosely inspired by the [Async package](https://github.com/caolan/async).
 
 ## Installation
 
@@ -31,7 +31,7 @@ promiseSeries([ getApi1, getApi2 ])
   .then(res => console.log(res)) // [[Object], [Object]]
 
 promiseSeries({ api1: getApi1, api2: getApi2 })
-  .then(res => console.log(res)) // { api1: [Object], api2: [Object] } 
+  .then(res => console.log(res)) // { api1: [Object], api2: [Object] }
 ```
 
 ### waterfall(work:Array)
@@ -44,13 +44,13 @@ var workToDo = []
 
 for (let i of [1, 2, 3]) {
   workToDo.push(function(previous) {
-    return fetch(`http://localhost/endpoint-${i}.json?exclude=${previous.id}`)
+    return fetch(`endpoint-${i}.json?exclude=${previous.id}`)
       .then(res => res.json())
   })
 }
 
 promiseWaterfall(workToDo)
-  .then(res => console.log(res)) // [Object] 
+  .then(res => console.log(res)) // [Object]
 ```
 
 ### chunk(work:Array, size:Number = 5)
@@ -64,11 +64,31 @@ var i = 0
 
 while (i++ < 12) {
   workToDo.push(function() {
-    return fetch(`http://localhost/endpoint-${i}.json`)
+    return fetch(`endpoint-${i}.json`)
       .then(res => res.json())
   })
 }
 
 promiseChunk(workToDo, 3)
   .then(res => console.log(res)) // [[Object],[Object],[Object],...]
+```
+
+### retry(task:Function, retries:Number = 3)
+
+If the given `task` function rejects when called then this method will call it again up to the specified number of `retries`.
+
+```js
+var promiseRetry = require('promise-patterns').retry
+
+function attemptToFetch() {
+  return fetch().then(res => res.json())
+}
+
+promiseRetry(attemptToFetch, 3)
+  .then(json => {
+    console.log(json)
+  })
+  .catch(() => {
+    console.error('Number of attempts to fetch exceeded')
+  })
 ```
