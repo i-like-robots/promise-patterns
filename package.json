@@ -7,7 +7,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "mocha 'tests/spec/**/*.js'"
+    "test": "standard && npm run unit",
+    "unit": "mocha 'tests/spec/**/*.js'"
   },
   "author": "Matt Hinchliffe",
   "repository": {
@@ -19,6 +20,10 @@
   "dependencies": {},
   "devDependencies": {
     "mocha": "^2.3.2",
-    "sinon": "^1.16.1"
+    "sinon": "^1.16.1",
+    "standard": "^7.0.0"
+  },
+  "standard": {
+    "globals": [ "describe", "context", "it", "beforeEach", "afterEach" ]
   }
 }
