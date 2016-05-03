@@ -1,18 +1,20 @@
-var sinon = require('sinon')
+'use strict'
 
-function success(value) {
-  return new Promise(function(resolve, reject) {
+const sinon = require('sinon')
+
+function success (value) {
+  return new Promise(resolve => {
     setTimeout(() => resolve(value), 100)
   })
 }
 
-function fail(value) {
-  return new Promise(function(resolve, reject) {
+function fail (value) {
+  return new Promise((resolve, reject) => {
     setTimeout(() => reject(new Error(value)), 100)
   })
 }
 
-function Task(value) {
+function Task (value) {
   this.value = value
 
   this.fulfill = sinon.spy(success.bind(null, value))

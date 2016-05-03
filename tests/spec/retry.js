@@ -5,9 +5,7 @@ const assert = require('assert')
 const subject = require('../../lib/retry')
 
 describe('Retry', () => {
-
   describe('given a function', () => {
-
     it('passes on value when task resolves', () => {
       const task = sinon.stub().returns(Promise.resolve('success'))
 
@@ -38,17 +36,13 @@ describe('Retry', () => {
         assert.equal(task.callCount, 4)
       })
     })
-
   })
 
   describe('given a non function', () => {
-
     it('rejects with a type error', () => {
       subject(null).catch(result => {
         assert.ok(result instanceof TypeError)
       })
     })
-
   })
-
 })
