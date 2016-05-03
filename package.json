@@ -1,6 +1,6 @@
 {
   "name": "promise-patterns",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Utility functions to help compose promise based code.",
   "engines": {
     "node": ">=4.0.0"
@@ -24,6 +24,12 @@
     "standard": "^7.0.0"
   },
   "standard": {
-    "globals": [ "describe", "context", "it", "beforeEach", "afterEach" ]
+    "globals": [
+      "describe",
+      "context",
+      "it",
+      "beforeEach",
+      "afterEach"
+    ]
   }
 }
