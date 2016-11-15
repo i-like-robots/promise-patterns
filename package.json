@@ -3,12 +3,13 @@
   "version": "0.0.7",
   "description": "Utility functions to help compose promise based code.",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=6.0.0"
   },
   "main": "index.js",
   "scripts": {
-    "test": "standard && npm run unit",
-    "unit": "mocha 'tests/spec/**/*.js'"
+    "lint": "standard lib/*.js tests/*.js",
+    "unit": "mocha 'tests/spec/**/*.js'",
+    "test": "npm run lint && npm run unit"
   },
   "author": "Matt Hinchliffe",
   "repository": {
@@ -21,7 +22,7 @@
   "devDependencies": {
     "mocha": "^2.3.2",
     "sinon": "^1.16.1",
-    "standard": "^7.0.0"
+    "standard": "^8.5.0"
   },
   "standard": {
     "globals": [
