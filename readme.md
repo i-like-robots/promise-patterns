@@ -8,69 +8,67 @@ Utility functions to help compose promise based code. Loosely inspired by the [A
 npm install --save promise-patterns
 ```
 
-## API
+## Methods
 
 ### series(work:Array|Object)
 
-Executes each function in the given array or object of `work` in series (each function will be called when the previous has finished). Each function must return a promise or a resolved value. The fulfilled callback will receive an array of the results or an object with each key assigned the resolved value.
+Executes each function in the given array or object of `work` in series (each function will be called when the previous has finished). Each function _must_ return a promise or a resolved value. The fulfilled callback will receive an array of the results or an object with each key assigned the resolved value.
 
 ```js
-var promiseSeries = require('promise-patterns').series
+const { series } = require('promise-patterns')
 
-function getApi1() {
-  return fetch('http://localhost/api1.json')
-    .then(res => res.json())
+function saveItem () {
+  return fetch('http://localhost/api/item', { method: 'POST', body: { ... } })
 }
 
-function getApi2() {
-  return fetch('http://localhost/api2.json')
-    .then(res => res.json())
+function notifySaveSuccess () {
+  return fetch('http://localhost/notifications', { method: 'PUT' })
 }
 
-promiseSeries([ getApi1, getApi2 ])
-  .then(res => console.log(res)) // [[Object], [Object]]
-
-promiseSeries({ api1: getApi1, api2: getApi2 })
-  .then(res => console.log(res)) // { api1: [Object], api2: [Object] }
+series([ saveItem, notifySaveSuccess ])
+  .then((result) => console.log(result)) // [ [Object], [Object] ]
 ```
 
 ### waterfall(work:Array)
 
-Executes each function in the given array of `work` in series (each function will be called when the previous has finished) and passes the result of the previous to the next. Each function must return a promise or a resolved value. The fulfilled callback will receive the final result. This function can be considered equivalent to `promise1.then(promise2).then(promise3)` but is useful for composing a dynamic chain.
+Executes each function in the given array of `work` in series (each function will be called when the previous has finished) and passes the result of the previous to the next. Each function _must_ return a promise or a resolved value. The fulfilled callback will receive the final result. This function can be considered equivalent to `promise1.then(promise2).then(promise3)` but is useful for composing a dynamic chain.
 
 ```js
-var promiseWaterfall = require('promise-patterns').waterfall
-var workToDo = []
+const { waterfall } = require('promise-patterns')
+const work = []
 
-for (let i of [1, 2, 3]) {
-  workToDo.push(function(previous) {
-    return fetch(`endpoint-${i}.json?exclude=${previous.id}`)
-      .then(res => res.json())
-  })
+function getImageSet () {
+  return fetch('http://localhost/api/imageSet/123')
+    .then((res) => res.ok ? res.json() : Promise.reject(res.status))
 }
 
-promiseWaterfall(workToDo)
-  .then(res => console.log(res)) // [Object]
+function getFirstImage (data) {
+  return fetch(`http://localhost/api/image/${data.images[0]}`)
+}
+
+waterfall([ getImageSet, getFirstImage ])
+  .then((result) => console.log(result)) // [Object]
 ```
 
 ### chunk(work:Array, size:Number = 5)
 
-Splits the given array of `work` into chunks of the maximum given `size` and executes each chunk in series. The functions within a chunk will be executed in parallel. Each function must return a promise or a resolved value. The fulfilled callback will receive a single array of all of the results. This can be considered equivalent to `Promise.all` but is useful for throttling tasks.
+Splits the given array of `work` into chunks of the maximum given `size` and executes each chunk in series. The functions within a chunk will be executed in parallel. Each function _must_ return a promise or a resolved value. The fulfilled callback will receive a single array of all of the results. This can be considered equivalent to `Promise.all` but is useful for throttling tasks.
 
 ```js
-var promiseChunk = require('promise-patterns').chunk
-var workToDo = []
-var i = 0
+const { chunk } = require('promise-patterns')
+const work = []
+
+let i = 0
 
 while (i++ < 12) {
-  workToDo.push(function() {
-    return fetch(`endpoint-${i}.json`)
+  work.push(() => (
+    fetch(`http://localhost/api/item/${i}`)
       .then(res => res.json())
-  })
+  ))
 }
 
-promiseChunk(workToDo, 3)
-  .then(res => console.log(res)) // [[Object],[Object],[Object],...]
+chunk(workToDo, 3)
+  .then((res) => console.log(res)) // [[Object],[Object],[Object],...]
 ```
 
 ### retry(task:Function, retries:Number = 3)
@@ -78,17 +76,14 @@ promiseChunk(workToDo, 3)
 If the given `task` function rejects when called then this method will call it again up to the specified number of `retries`.
 
 ```js
-var promiseRetry = require('promise-patterns').retry
+const { retry } = require('promise-patterns')
 
-function attemptToFetch() {
-  return fetch().then(res => res.json())
+function attemptToFetch () {
+  return fetch('http://flakey-provider.com/api/item')
+    .then((res) => res.ok ? res.json() : Promise.reject(res.status))
 }
 
 promiseRetry(attemptToFetch, 3)
-  .then(json => {
-    console.log(json)
-  })
-  .catch(() => {
-    console.error('Number of attempts to fetch exceeded')
-  })
+  .then((data) => console.log(data)) // [Object]
+  .catch(() => console.error('Number of attempts to fetch exceeded'))
 ```
