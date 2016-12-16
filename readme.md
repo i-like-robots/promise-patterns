@@ -83,7 +83,7 @@ function attemptToFetch () {
     .then((res) => res.ok ? res.json() : Promise.reject(res.status))
 }
 
-promiseRetry(attemptToFetch, 3)
+retry(attemptToFetch, 3)
   .then((data) => console.log(data)) // [Object]
   .catch(() => console.error('Number of attempts to fetch exceeded'))
 ```
