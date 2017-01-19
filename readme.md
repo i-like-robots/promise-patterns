@@ -87,3 +87,27 @@ retry(attemptToFetch, 3)
   .then((data) => console.log(data)) // [Object]
   .catch(() => console.error('Number of attempts to fetch exceeded'))
 ```
+
+### zip(work:Object)
+
+This can be considered equivalent to `Promise.all` but the function accepts an object of `work` and will return an object when all values are resolved instead of an array.
+
+```js
+const { zip } = require('promise-patterns')
+
+function fetchVideoData () {
+  return fetch('http://api.videos.com/video/123456')
+    .then((res) => res.ok ? res.json : Promise.reject(res.status))
+}
+
+function fetchVideoRenditions () {
+  return fetch('http://api.videos.com/video/123456/rendition')
+    .then((res) => res.ok ? res.json : Promise.reject(res.status))
+}
+
+zip({
+  video: fetchVideoData,
+  renditions: fetchVideoRenditions
+})
+  .then(({ video, renditions }) => console.log(video, renditions)) // [Object] [Object]
+```
