@@ -1,75 +1,87 @@
-'use strict'
-
+const sinon = require('sinon')
 const assert = require('assert')
-const work = require('../helpers/work')
 const subject = require('../../lib/zip')
 
+const sandbox = sinon.sandbox.create()
+
+const createCallback = (value) => sandbox.stub().returns(Promise.resolve(value))
+
 describe('Zip', () => {
-  let todo, tasks, fulfilled, rejected
-
-  function run (tasks) {
-    return subject(tasks).then(
-      args => { fulfilled = args || true },
-      args => { rejected = args || true }
-    )
-  }
-
-  beforeEach(() => {
-    todo = work(3)
-    fulfilled = rejected = undefined
+  afterEach(() => {
+    sandbox.reset()
   })
 
   describe('given an object', () => {
-    beforeEach(() => {
-      tasks = { one: todo[0].fulfill, two: todo[1].fulfill, three: todo[2].fulfill }
-      return run(tasks)
-    })
+    const fixture = {
+      '1': createCallback('one'),
+      '2': createCallback('two'),
+      '3': createCallback('three')
+    }
 
-    it('calls each task', () => {
-      assert.ok(tasks.one.calledOnce)
-      assert.ok(tasks.two.calledOnce)
-      assert.ok(tasks.three.calledOnce)
-    })
+    it('calls each task', () => (
+      subject(fixture).then(() => {
+        sinon.assert.calledOnce(fixture['1'])
+        sinon.assert.calledOnce(fixture['2'])
+        sinon.assert.calledOnce(fixture['3'])
+      })
+    ))
 
-    it('returns the results assigned to each key', () => {
-      assert.equal(todo[0].value, fulfilled.one)
-      assert.equal(todo[1].value, fulfilled.two)
-      assert.equal(todo[2].value, fulfilled.three)
-    })
+    it('resolves the results assigned to each key', () => (
+      subject(fixture).then((results) => {
+        assert.equal(results['1'], 'one')
+        assert.equal(results['2'], 'two')
+        assert.equal(results['3'], 'three')
+      })
+    ))
+  })
+
+  describe('given an object with mixed values', () => {
+    const fixture = {
+      '1': 'one',
+      '2': Promise.resolve('two'),
+      '3': () => 'three'
+    }
+
+    it('resolves the results assigned to each key', () => (
+      subject(fixture).then((results) => {
+        assert.equal(results['1'], 'one')
+        assert.equal(results['2'], 'two')
+        assert.equal(results['3'], 'three')
+      })
+    ))
   })
 
   describe('given an empty object', () => {
-    beforeEach(() => {
-      tasks = {}
-      return run(tasks)
-    })
+    const fixture = {}
 
-    it('resolves with an empty object', () => {
-      assert.ok(typeof fulfilled === 'object')
-      assert.ok(rejected === undefined)
-    })
+    it('resolves with an empty object', () => (
+      subject(fixture).then((result) => {
+        assert.ok(typeof result === 'object')
+      })
+    ))
   })
 
   describe('given a non object', () => {
-    beforeEach(() => {
-      tasks = ''
-      return run(tasks)
-    })
+    const fixture = []
 
-    it('rejects with a type error', () => {
-      assert.ok(rejected instanceof TypeError)
-    })
+    it('rejects with a type error', () => (
+      subject(fixture).catch((err) => {
+        assert.ok(err instanceof TypeError)
+      })
+    ))
   })
 
   describe('when handling rejection', () => {
-    beforeEach(() => {
-      tasks = todo.map((item) => item.fulfill)
-      tasks[1] = todo[1].reject
-      return run(tasks)
-    })
+    const fixture = {
+      '1': createCallback('one'),
+      '2': createCallback('two'),
+      '3': () => { throw new Error() }
+    }
 
-    it('passes any errors on to be caught', () => {
-      assert.ok(rejected instanceof Error)
-    })
+    it('passes any errors on to be caught', () => (
+      subject(fixture).catch((err) => {
+        assert.ok(err instanceof Error)
+      })
+    ))
   })
 })
