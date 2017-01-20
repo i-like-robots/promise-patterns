@@ -90,7 +90,7 @@ retry(attemptToFetch, 3)
 
 ### zip(work:Object)
 
-This can be considered equivalent to `Promise.all` but the function accepts an object of `work` and will return an object when all values are resolved instead of an array.
+This can be considered equivalent to `Promise.all` but the function accepts an object of `work` and will return an object when all values are resolved instead of an array. Values may be simple types, promises or functions. Functions will be called and simple types will be wrapped as a promise.
 
 ```js
 const { zip } = require('promise-patterns')
