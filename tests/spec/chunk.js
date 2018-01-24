@@ -43,18 +43,6 @@ describe('Chunk', () => {
     })
   })
 
-  describe('given an empty array', () => {
-    beforeEach(() => {
-      tasks = []
-      return run(tasks)
-    })
-
-    it('resolves successfully', () => {
-      assert.ok(Array.isArray(fulfilled))
-      assert.ok(rejected === undefined)
-    })
-  })
-
   describe('given a non array', () => {
     beforeEach(() => {
       tasks = ''

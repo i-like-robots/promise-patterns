@@ -12,7 +12,7 @@ npm install --save promise-patterns
 
 ### series(work:Array|Object)
 
-Executes each function in the given array or object of `work` in series (each function will be called when the previous has finished). Each function _must_ return a promise or a resolved value. The fulfilled callback will receive an array of the results or an object with each key assigned the resolved value.
+Resolves each item in the given array or object of `work` in series (each item will be resolved when the previous has completed). If an item is a function it will be called and its value resolved. The fulfilled callback will receive an array of the results or an object with each key assigned the resolved value.
 
 ```js
 const { series } = require('promise-patterns')
@@ -31,22 +31,22 @@ series([ saveItem, notifySaveSuccess ])
 
 ### waterfall(work:Array)
 
-Executes each function in the given array of `work` in series (each function will be called when the previous has finished) and passes the result of the previous to the next. Each function _must_ return a promise or a resolved value. The fulfilled callback will receive the final result. This function can be considered equivalent to `promise1.then(promise2).then(promise3)` but is useful for composing a dynamic chain.
+Resolves each item in the given array of `work` in series (each item will be resolved when the previous has completed). If an item is a function it will be called with the value of the previous. The fulfilled callback will receive the final result. This function can be considered equivalent to `Promise.resolve(promise1).then(promise2).then(promise3)` but is useful for composing a dynamic chain.
 
 ```js
 const { waterfall } = require('promise-patterns')
 const work = []
 
-function getImageSet () {
+function fetchImageSet () {
   return fetch('http://localhost/api/imageSet/123')
     .then((res) => res.ok ? res.json() : Promise.reject(res.status))
 }
 
-function getFirstImage (data) {
+function fetchFirstImage (data) {
   return fetch(`http://localhost/api/image/${data.images[0]}`)
 }
 
-waterfall([ getImageSet, getFirstImage ])
+waterfall([ fetchImageSet, fetchFirstImage ])
   .then((result) => console.log(result)) // [Object]
 ```
 

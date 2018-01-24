@@ -66,30 +66,6 @@ describe('Series', () => {
     })
   })
 
-  describe('given an empty array', () => {
-    beforeEach(() => {
-      tasks = []
-      return run(tasks)
-    })
-
-    it('resolves with an empty array', () => {
-      assert.ok(Array.isArray(fulfilled))
-      assert.ok(rejected === undefined)
-    })
-  })
-
-  describe('given an empty object', () => {
-    beforeEach(() => {
-      tasks = {}
-      return run(tasks)
-    })
-
-    it('resolves with an empty object', () => {
-      assert.ok(typeof fulfilled === 'object')
-      assert.ok(rejected === undefined)
-    })
-  })
-
   describe('given a non array or object', () => {
     beforeEach(() => {
       tasks = ''
