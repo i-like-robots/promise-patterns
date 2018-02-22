@@ -1,5 +1,5 @@
-const pair = require('./shared/pair')
-const settle = require('./shared/settle')
+import pair from './concerns/pair'
+import settle from './concerns/settle'
 
 function zip (work) {
   if (typeof work === 'object') {
@@ -13,4 +13,4 @@ function zip (work) {
   return Promise.reject(new TypeError('work must be an object'))
 }
 
-module.exports = zip
+export default zip

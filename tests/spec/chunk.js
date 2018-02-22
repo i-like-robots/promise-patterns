@@ -1,8 +1,6 @@
-'use strict'
-
 const assert = require('assert')
 const work = require('../helpers/work')
-const subject = require('../../lib/chunk')
+const { chunk: subject } = require('../../')
 
 describe('Chunk', () => {
   let todo, tasks, fulfilled, rejected

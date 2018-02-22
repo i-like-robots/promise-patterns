@@ -1,8 +1,6 @@
-'use strict'
-
 const assert = require('assert')
 const work = require('../helpers/work')
-const subject = require('../../lib/waterfall')
+const { waterfall: subject } = require('../../')
 
 describe('Waterfall', () => {
   var todo, tasks, fulfilled, rejected

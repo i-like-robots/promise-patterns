@@ -1,8 +1,6 @@
-'use strict'
-
 const assert = require('assert')
 const work = require('../helpers/work')
-const subject = require('../../lib/series')
+const { series: subject } = require('../../')
 
 describe('Series', () => {
   let todo, tasks, fulfilled, rejected
@@ -40,29 +38,6 @@ describe('Series', () => {
       assert.equal(todo[0].value, fulfilled[0])
       assert.equal(todo[1].value, fulfilled[1])
       assert.equal(todo[2].value, fulfilled[2])
-    })
-  })
-
-  describe('given an object', () => {
-    beforeEach(() => {
-      tasks = { one: todo[0].fulfill, two: todo[1].fulfill, three: todo[2].fulfill }
-      return run(tasks)
-    })
-
-    it('calls each task in order', () => {
-      assert.ok(tasks.one.calledBefore(tasks.two))
-      assert.ok(tasks.two.calledBefore(tasks.three))
-    })
-
-    it('collects each result', () => {
-      assert.equal(typeof fulfilled, 'object')
-      assert.equal(Object.keys(fulfilled).length, Object.keys(todo).length)
-    })
-
-    it('returns the results assigned to each key', () => {
-      assert.equal(todo[0].value, fulfilled.one)
-      assert.equal(todo[1].value, fulfilled.two)
-      assert.equal(todo[2].value, fulfilled.three)
     })
   })
 

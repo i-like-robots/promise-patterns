@@ -1,16 +1,11 @@
-'use strict'
-
-const series = require('./series')
+import settle from './concerns/settle'
+import series from './series'
 
 function run (tasklist) {
-  return () => {
-    return Promise.all(tasklist.map(item => item()))
-  }
+  return () => Promise.all(tasklist.map(settle))
 }
 
-function chunk (work, size) {
-  size = size || 5
-
+function chunk (work: Array<any>, size: number = 5) {
   if (Array.isArray(work)) {
     const slices = []
 
@@ -26,4 +21,4 @@ function chunk (work, size) {
   return Promise.reject(new TypeError('work must be an array'))
 }
 
-module.exports = chunk
+export default chunk

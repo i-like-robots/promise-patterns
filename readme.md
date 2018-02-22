@@ -1,11 +1,13 @@
-# Promise Patterns ![Build status](https://api.travis-ci.org/i-like-robots/promise-patterns.png)
+# Promise Patterns
 
-Utility functions to help compose promise based code. Loosely inspired by the [Async package](https://github.com/caolan/async).
+![Build status](https://api.travis-ci.org/i-like-robots/promise-patterns.png)
+
+Utility functions to help compose promise based code.
 
 ## Installation
 
 ```bash
-npm install --save promise-patterns
+npm install -S promise-patterns
 ```
 
 ## Methods

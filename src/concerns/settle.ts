@@ -1,4 +1,4 @@
-function resolve (value, args) {
+function resolve (value: any, args?: any): Promise<any> {
   if (value instanceof Promise) {
     return value
   }
@@ -15,4 +15,4 @@ function resolve (value, args) {
   return Promise.resolve(value)
 }
 
-module.exports = resolve
+export default resolve
