@@ -7,6 +7,7 @@
   },
   "main": "dist/bundle-cjs.js",
   "module": "dist/bundle-es6.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublish": "npm run build",
     "pretest": "npm run build",
@@ -26,7 +27,7 @@
   "devDependencies": {
     "mocha": "^5.0.0",
     "rollup": "^0.55.0",
-    "rollup-plugin-typescript": "^0.8.1",
+    "rollup-plugin-typescript2": "^0.11.1",
     "sinon": "^4.2.1",
     "standard": "^10.0.3",
     "typescript": "^2.6.2"
