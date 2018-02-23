@@ -1,10 +1,8 @@
-'use strict'
-
-function pair (results, keys) {
+function pair (results: Array<any>, keys: Array<string>): object {
   return results.reduce((map, value, i) => {
     map[keys[i]] = value
     return map
   }, {})
 }
 
-module.exports = pair
+export default pair

@@ -1,8 +1,6 @@
-'use strict'
-
 const sinon = require('sinon')
 const assert = require('assert')
-const subject = require('../../lib/retry')
+const { retry: subject } = require('../../')
 
 describe('Retry', () => {
   describe('given a function', () => {

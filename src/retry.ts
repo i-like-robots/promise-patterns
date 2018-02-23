@@ -1,18 +1,18 @@
-'use strict'
+export interface Task {
+  (): Promise<any>
+}
 
-function run (task, retries) {
+function run (task: Task, retries: number): Promise<any> {
   return task().catch(err => {
     if (retries) {
       return run(task, retries - 1)
     } else {
-      throw err
+      return Promise.reject(err)
     }
   })
 }
 
-function retry (task, retries) {
-  retries = retries || 3
-
+function retry (task: Task, retries: number = 3): Promise<any> {
   if (typeof task === 'function') {
     return run(task, retries)
   } else {
@@ -20,4 +20,4 @@ function retry (task, retries) {
   }
 }
 
-module.exports = retry
+export default retry

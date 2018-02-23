@@ -1,8 +1,6 @@
-'use strict'
+import settle from './concerns/settle'
 
-const settle = require('./shared/settle')
-
-function run (tasklist, prev) {
+function run (tasklist, prev?): Promise<Array<any>> {
   return new Promise((resolve, reject) => {
     if (tasklist.length === 0) {
       return resolve(tasklist)
@@ -18,7 +16,7 @@ function run (tasklist, prev) {
   })
 }
 
-function waterfall (work) {
+function waterfall (work: Array<any>): Promise<Array<any>> {
   if (Array.isArray(work)) {
     return run(work)
   }
@@ -26,4 +24,4 @@ function waterfall (work) {
   return Promise.reject(new TypeError('work must be an array'))
 }
 
-module.exports = waterfall
+export default waterfall

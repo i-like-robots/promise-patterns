@@ -1,6 +1,6 @@
 const sinon = require('sinon')
 const assert = require('assert')
-const subject = require('../../lib/zip')
+const { zip: subject } = require('../../')
 
 const createCallback = (value) => sinon.stub().resolves(value)
 

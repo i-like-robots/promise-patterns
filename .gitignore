@@ -1,4 +1,7 @@
+.rpt2_cache/
+.vscode/
 node_modules/
+dist/
 
 .DS_Store
 Thumbs.db
