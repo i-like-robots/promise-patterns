@@ -1,7 +1,7 @@
 import settle from './concerns/settle'
 import series from './series'
 
-function run (tasklist) {
+function run (tasklist: Array<any>) {
   return () => Promise.all(tasklist.map(settle))
 }
 

@@ -1,7 +1,7 @@
 import pair from './concerns/pair'
 import settle from './concerns/settle'
 
-function zip (work) {
+function zip (work: { [key: string]: any }) {
   if (typeof work === 'object') {
     const keys = Object.keys(work)
     const promises = keys.map((key) => settle(work[key]))

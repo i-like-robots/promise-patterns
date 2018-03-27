@@ -1,6 +1,6 @@
 import settle from './concerns/settle'
 
-function run (tasklist, prev?): Promise<Array<any>> {
+function run (tasklist: Array<any>, prev?: any): Promise<Array<any>> {
   return new Promise((resolve, reject) => {
     if (tasklist.length === 0) {
       return resolve(tasklist)

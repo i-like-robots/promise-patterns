@@ -19,7 +19,7 @@ function run (tasklist: Array<any>, args: Array<any> = []): Promise<Array<any>> 
   })
 }
 
-function series (work: Array<any>|object): Promise<Array<any>|object> {
+function series (work: Array<any>|{ [key: string]: any }): Promise<Array<any>|object> {
   if (Array.isArray(work)) {
     return run(work)
   }
